@@ -4,23 +4,23 @@
 
 * int (Edi)
 * char (Edi)
-* bool (Catalin)
-* string(Catalin)
-* float(Catalin)
+* bool (Catalin) - facut
+* string(Catalin) - facut
+* float(Catalin) - facut
 
 * vectori (Edi)
-* structuri(Catalin)
+* structuri(Catalin) - facut
 
 --- Functionalitati ---
 
-* if (Edi)
-* if_else(Catalin)
+* if (Edi) - facut 
+* if_else(Catalin) - facut
 * while (Edi)
-* for(Catalin)
+* for(Catalin) - 
 
-* expresii aritmetice ( +, -, /, * etc.)(Catalin)
-* expresii boolene (and, or, !, <, > etc.) (Edi)
+* expresii aritmetice ( +, -, /, * etc.)(Catalin) - facut
+* expresii boolene (and, or, !, <, > etc.) (Edi) - facut
 * operatii pe string-uri ( concatenare ) (Edi)
 
-* functii(Catalin)
-* apeluri de functii(Catalin)
+* functii(Catalin) - facut
+* apeluri de functii(Catalin) - facut
