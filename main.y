@@ -48,10 +48,8 @@ parameter : TYPE ID
 		  | struct_declaration
 		  ;
 
-value : aexp {printf("am gasi bool\n");}
+value : exp {printf("am gasi exp\n");}
 	  | SVAL {printf("am gasi string\n");}
-  	  | bexp {printf("am gasi int: %s\n", yytext);}
-	  | ID {printf("am gasi id\n");}
 	  | function_call {printf("am gasi function call\n");}
 	  ;
 
@@ -72,23 +70,29 @@ stmt : var_declaration {printf("ma duc in var decl\n");}
  	 | return ';'
  	 ;
 
-if : IF '('bexp')' '{' code '}'
- 	| IF '('bexp')' '{'code'}' ELSE '{'code '}'
+if : IF '('exp')' '{' code '}'
+ 	| IF '('exp')' '{'code'}' ELSE '{'code '}'
  	;
 
-for : FOR '(' stmt bexp ';' stmt ')' '{'code'}'
+for : FOR '(' stmt exp ';' stmt ')' '{'code'}'
 	;
 
+exp : aexp
+    | bexp
+    | ID
+    | U_LOGIC '('exp')'
+    | '('exp')' BI_LOGIC '('exp')'
+    | '('exp')' COMPARE '('exp')'
+    | '('exp')' ARIT '('exp')'
+    ;
+
+
 bexp : BVAL
-     | U_LOGIC '('bexp')'
-     | '('bexp')' BI_LOGIC '('bexp')'
-     |  '('aexp')' COMPARE '('aexp')'
      ;
 
 aexp : INT_NR
 	 | FLOAT_NR
-	 | '('aexp')' ARIT '('aexp')'
-	 ;
+     ;
 
 function_call : ID '(' ')'
 			  | ID '(' arguments ')'
