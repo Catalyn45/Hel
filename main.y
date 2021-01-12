@@ -6,7 +6,12 @@ extern int yylineno;
 int yylex();
 void yyerror(char * s);
 %}
-%token ID TYPE CONST COMPARE CONCAT BVAL SVAL START_P RET INT_NR FLOAT_NR CUSTOM_TYPE IF ELSE FOR BI_LOGIC U_LOGIC ARIT ASIGN
+%token ID TYPE CONST COMPARE CONCAT BVAL SVAL START_P RET INT_NR FLOAT_NR CUSTOM_TYPE IF ELSE FOR BI_LOGIC U_LOGIC ARIT
+%left ARIT
+%left BI_LOGIC
+%left COMPARE
+%right U_LOGIC
+%right '='
 %start s
 %%
 
@@ -20,11 +25,11 @@ antets : antet
 
 antet : declaration
 	  | CONST declaration
-	  | struct_definition
+	  | struct_definition ';'
 	  ;
 
 declaration : fun_declaration
-			| var_declaration
+			| var_declaration ';'
 			| struct_declaration ';'
 			;
 
@@ -36,8 +41,8 @@ declared_fun : TYPE ID '('')'
 			 | TYPE ID '(' parameters ')'
 			 ;
 
-var_declaration : TYPE ID ';' {printf("Declar fara sa initializez\n");}
-				| TYPE ID '=' value ';' {printf("Declar si initializez\n");}
+var_declaration : TYPE ID {printf("Declar fara sa initializez\n");}
+				| TYPE ID '=' value {printf("Declar si initializez\n");}
 				;
 
 parameters : parameter
@@ -60,37 +65,40 @@ code : stmt {printf("ma duc in stmt\n");}
 	 | code stmt
 	 ;
 
-stmt : var_declaration {printf("ma duc in var decl\n");}
-	 | struct_definition
-	 | struct_declaration ';'
+stmt : custom_stmt ';'
 	 | if
 	 | for
-	 | ID '=' value ';'
- 	 | function_call ';'
- 	 | return ';'
+     | return ';'
+     | struct_definition ';'
  	 ;
 
+custom_stmt : struct_declaration
+		    | var_declaration
+		    | ID '=' value
+		    | function_call
+		    ;
+
 if : IF '('exp')' '{' code '}'
- 	| IF '('exp')' '{'code'}' ELSE '{'code '}'
+ 	| IF '('exp')' '{'code'}' ELSE '{' code '}'
  	;
 
-for : FOR '(' stmt exp ';' stmt ')' '{'code'}'
+for : FOR '(' custom_stmt ';' exp ';' custom_stmt ')' '{' code '}'
 	;
 
-exp : aexp
-    | bexp
-    | ID
-    | U_LOGIC '('exp')'
-    | '('exp')' BI_LOGIC '('exp')'
-    | '('exp')' COMPARE '('exp')'
-    | '('exp')' ARIT '('exp')'
+exp : aexp {printf("am luat aexp: %s\n", yytext);}
+    | bexp	{printf("am luat bexp%s\n", yytext);}
+    | ID {printf("am luat id%s\n", yytext);}
+    | U_LOGIC exp {printf("fac not%s\n", yytext);}
+    | exp BI_LOGIC exp {printf("fac bilogic%s\n", yytext);}
+    | exp COMPARE exp {printf("compar exp%s\n", yytext);}
+    | exp ARIT exp {printf("fac aritm%s\n", yytext);}
     ;
 
 
 bexp : BVAL
      ;
 
-aexp : INT_NR
+aexp : INT_NR {printf("am luat int\n");}
 	 | FLOAT_NR
      ;
 
@@ -105,17 +113,17 @@ arguments : value
 return : RET value
 	   ;
 
-struct_definition : CUSTOM_TYPE ID  '{' members '}' ';'
-				  | CUSTOM_TYPE ID '{' members '}' ID ';'
+struct_definition : CUSTOM_TYPE ID  '{' members '}'
+				  | CUSTOM_TYPE ID '{' members '}' ID
 				  ;
 
 members : member
 		| members member
 		;
 
-member : var_declaration
+member : var_declaration ';'
 	   | struct_declaration ';'
-	   | struct_definition
+	   | struct_definition ';'
 	   ;
 
 %%
