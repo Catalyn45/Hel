@@ -10,6 +10,7 @@
 
 [ \t];
 
+
 ";" {return *yytext;}
 "{" {return *yytext;}
 "}" {return *yytext;}
