@@ -16,7 +16,7 @@
 * if (Edi) - facut 
 * if_else(Catalin) - facut
 * while (Edi)
-* for(Catalin) - 
+* for(Catalin) - facut
 
 * expresii aritmetice ( +, -, /, * etc.)(Catalin) - facut
 * expresii boolene (and, or, !, <, > etc.) (Edi) - facut

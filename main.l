@@ -1,13 +1,12 @@
 %{
 #include <stdio.h>
+#include <string.h>
 #include "y.tab.h"
 %}
 %option noyywrap
 %%
 
 \n {yylineno++;}
-
-[ \t];
 
 ";" {return *yytext;}
 "{" {return *yytext;}
@@ -18,7 +17,7 @@
 "," {return *yytext;}
 "." {return *yytext;}
 
-"string"|"float"|"bool" {return TYPE;}
+"string"|"float"|"bool" {yylval.type = strdup(yytext);return TYPE;}
 
 "struct" {return CUSTOM_TYPE;}
 
@@ -40,14 +39,23 @@
 
 "++" {return CONCAT;}
 
-"True"|"False" {return BVAL;}
+"True"|"False" {
+	yylval.const_value_bool = strdup(yytext);
+	return BVAL;
+}
 \"[^\'\"\n]+\" {return SVAL;}
 
 
-[0-9]+\.[0-9]+ { return FLOAT_NR;}
+[0-9]+\.[0-9]+ {
+	yylval.const_value_float = atof(yytext);
+	return FLOAT_NR;
+}
 
-[+-]?[1-9][0-9]*|0 {return INT_NR;}
+[+-]?[1-9][0-9]*|0 {
+	yylval.const_value_int = atoi(yytext);
+	return INT_NR;
+}
 
-[_a-zA-Z][_a-zA-Z0-9]* {return ID;}
+[_a-zA-Z][_a-zA-Z0-9]* {yylval.var_name = strdup(yytext);return ID;}
 
 %%
