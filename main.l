@@ -39,7 +39,10 @@
 
 "++" {return CONCAT;}
 
-"True"|"False" {return BVAL;}
+"True"|"False" {
+	yylval.const_value_bool = strdup(yytext);
+	return BVAL;
+}
 \"[^\'\"\n]+\" {return SVAL;}
 
 
@@ -48,7 +51,10 @@
 	return FLOAT_NR;
 }
 
-[+-]?[1-9][0-9]*|0 {return INT_NR;}
+[+-]?[1-9][0-9]*|0 {
+	yylval.const_value_int = atoi(yytext);
+	return INT_NR;
+}
 
 [_a-zA-Z][_a-zA-Z0-9]* {yylval.var_name = strdup(yytext);return ID;}
 
